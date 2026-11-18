@@ -31,7 +31,7 @@ Markup, CSS and JS are separate: `.astro` files hold markup only, styles live in
 | Small building blocks | `src/components/ui/` (Icon, ProjectRow, SubjectCard) |
 | Design tokens (both themes) | `src/styles/tokens.css` |
 | Shared CSS (base, page layout, rows, cards, prose, buttons) | `src/styles/global.css` imports them in order |
-| Browser scripts (theme toggle, ⌘K search, language switch) | `src/scripts/` |
+| Browser scripts (theme toggle, ⌘K search, language switch, ☰ menu ≤ 900px) | `src/scripts/` |
 | ⌘K search index (built at build time) | `src/data/search-index.ts` |
 | Projects | `src/content/projects/*.md` (English) + `src/content/projects-es/*.md` (Spanish text) → `/projects/<id>`, `/en/projects/<id>` |
 | Library subjects | `src/content/subjects/*.md` → `/library`, `/library/<subject>` |

@@ -17,6 +17,7 @@ It covers three things: **projects** (in progress and finished), a **library** o
 (later) /writing          blog posts, once 2–3 exist
 ```
 Every page exists in Spanish (default, at the paths above) and English (same paths under `/en`).
+At 900px and below, the navigation and social links fold into a ☰ menu panel; search and the theme toggle stay in the bar.
 Navigation: `proyectos · biblioteca · escritos (pronto) · sobre mí` (English: `projects · library · writing (soon) · about`), GitHub/LinkedIn icons, ⌘K search and a theme toggle.
 A floating `ES | EN` switch in the bottom-right corner links to the same page in the other language.
 The footer on every page has GitHub, LinkedIn, CV (in the page's language, downloads on click) and email.
@@ -40,7 +41,7 @@ See `src/content.config.ts`. Key fields:
 3. **Library, phase A.** Sort the `.tex` notes into subjects/topics. For each note, compile it to PDF (`latexmk -pdf`), place it in `public/notes/<subject>/`, and create a note entry with metadata. Add or rename subjects to match the real courses.
 4. **Library, phase B.** Convert the best notes to Markdown + KaTeX with `pandoc note.tex -t markdown` and fix the custom macros (TikZ figures → SVG/PNG). Consider Pagefind for full-text search across notes.
 5. **Projects.** As each project is finished, fill in its page (what, my part, how to run, results with real numbers and a chart) and set `status: done`.
-6. **Polish.** Generate an OG image, add a sitemap (`@astrojs/sitemap`), check Lighthouse scores, and make sure the mobile header doesn't wrap onto 3 lines (consider a compact menu below 600px).
+6. **Polish.** Generate an OG image, add a sitemap (`@astrojs/sitemap`), check Lighthouse scores. ~~Mobile header~~ done: ☰ menu at ≤ 900px.
 7. **Domain.** Claim it through the GitHub Student Pack, set `site` in `astro.config.mjs`, add `public/CNAME`, and update the links on LinkedIn, GitHub and the CVs.
 8. **Writing** (optional), once there are 2–3 posts.
 

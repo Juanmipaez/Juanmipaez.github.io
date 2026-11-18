@@ -2,7 +2,7 @@
 // Inline SVG icons. Brand marks (github, linkedin) are filled; the rest are
 // 24px stroke icons in the Lucide style.
 interface Props {
-  name: 'github' | 'linkedin' | 'mail' | 'file' | 'search' | 'terminal' | 'sun' | 'arrow-up-right';
+  name: 'github' | 'linkedin' | 'mail' | 'file' | 'search' | 'terminal' | 'sun' | 'arrow-up-right' | 'menu' | 'close';
   size?: number;
 }
 const { name, size = 16 } = Astro.props;
@@ -31,4 +31,6 @@ const filled = name === 'github' || name === 'linkedin';
   {name === 'terminal' && (<><polyline points="4 17 10 11 4 5" /><line x1="12" y1="19" x2="20" y2="19" /></>)}
   {name === 'sun' && (<><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" /></>)}
   {name === 'arrow-up-right' && (<><path d="M7 7h10v10" /><path d="M7 17 17 7" /></>)}
+  {name === 'menu' && (<><path d="M4 7h16" /><path d="M4 12h16" /><path d="M4 17h16" /></>)}
+  {name === 'close' && (<><path d="M18 6 6 18" /><path d="m6 6 12 12" /></>)}
 </svg>

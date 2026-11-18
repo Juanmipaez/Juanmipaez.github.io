@@ -1,6 +1,7 @@
 ---
 // Sticky site header: brand, main navigation, social icons, ⌘K search button, theme toggle.
-// Styles: styles/layout/header.css · Theme toggle logic: scripts/theme.ts
+// At 900px and below the navigation + social icons fold into a menu panel opened by the ☰ button.
+// Styles: styles/layout/header.css · Behavior: scripts/theme.ts, scripts/mobile-menu.ts
 import '../../styles/layout/header.css';
 import Icon from '../ui/Icon.astro';
 import { site, nav } from '../../data/site';
@@ -11,7 +12,7 @@ const t = useT(lang);
 const path = stripLang(Astro.url.pathname).replace(/\/$/, '') || '/';
 const isCurrent = (p: string) => path === p || path.startsWith(p + '/');
 ---
-<header class="site-header">
+<header class="site-header" data-site-header>
   <div class="container header-inner">
     <a href={href(lang, '/')} class="brand" aria-label={`${site.short}, ${t('header.home')}`}>
       <span class="brand-dot" aria-hidden="true"></span>
@@ -19,23 +20,28 @@ const isCurrent = (p: string) => path === p || path.startsWith(p + '/');
     </a>
 
     <div class="nav-cluster">
-      <nav class="nav-links" aria-label={t('nav.main')}>
-        {nav.map((item) =>
-          item.href ? (
-            <a href={href(lang, item.href)} aria-current={isCurrent(item.href) ? 'page' : undefined}>{t(item.key)}</a>
-          ) : (
-            <span class="nav-soon" title={t('nav.soonTitle')}>{t(item.key)} ({t('nav.soon')})</span>
-          )
-        )}
-      </nav>
+      <!-- Desktop: shown inline. Mobile: the panel the ☰ button opens. -->
+      <div class="menu-panel" id="site-menu">
+        <nav class="nav-links" aria-label={t('nav.main')}>
+          {nav.map((item) =>
+            item.href ? (
+              <a href={href(lang, item.href)} aria-current={isCurrent(item.href) ? 'page' : undefined}>{t(item.key)}</a>
+            ) : (
+              <span class="nav-soon" title={t('nav.soonTitle')}>{t(item.key)} ({t('nav.soon')})</span>
+            )
+          )}
+        </nav>
+        <div class="header-social">
+          <a class="icon-btn" href={site.links.github} aria-label="GitHub" title="GitHub" target="_blank" rel="noopener noreferrer">
+            <Icon name="github" />
+          </a>
+          <a class="icon-btn" href={site.links.linkedin} aria-label="LinkedIn" title="LinkedIn" target="_blank" rel="noopener noreferrer">
+            <Icon name="linkedin" size={15} />
+          </a>
+        </div>
+      </div>
 
       <div class="header-actions">
-        <a class="icon-btn" href={site.links.github} aria-label="GitHub" title="GitHub" target="_blank" rel="noopener noreferrer">
-          <Icon name="github" />
-        </a>
-        <a class="icon-btn" href={site.links.linkedin} aria-label="LinkedIn" title="LinkedIn" target="_blank" rel="noopener noreferrer">
-          <Icon name="linkedin" size={15} />
-        </a>
         <button type="button" class="pill-btn" data-open-search aria-label={t('header.searchAria')}>
           <Icon name="search" size={14} />
           <span class="search-label">{t('header.search')}</span>
@@ -45,6 +51,10 @@ const isCurrent = (p: string) => path === p || path.startsWith(p + '/');
           <span data-theme-icon="terminal"><Icon name="terminal" size={17} /></span>
           <span data-theme-icon="paper" hidden><Icon name="sun" size={17} /></span>
         </button>
+        <button type="button" class="icon-btn menu-btn" data-menu-toggle aria-controls="site-menu" aria-expanded="false" aria-label={t('header.menu')}>
+          <span data-menu-icon="open"><Icon name="menu" size={18} /></span>
+          <span data-menu-icon="close" hidden><Icon name="close" size={18} /></span>
+        </button>
       </div>
     </div>
   </div>
@@ -52,4 +62,5 @@ const isCurrent = (p: string) => path === p || path.startsWith(p + '/');
 
 <script>
   import '../../scripts/theme';
+  import '../../scripts/mobile-menu';
 </script>
