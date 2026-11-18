@@ -1,0 +1,31 @@
+---
+import Base from '../../../layouts/Base.astro';
+import SubjectCard from '../../../components/SubjectCard.astro';
+import { getSubjects, noteCounts } from '../../../data/content';
+import { langFromParam, langPaths, useT } from '../../../i18n';
+
+export const getStaticPaths = langPaths;
+const lang = langFromParam(Astro.params.lang);
+const t = useT(lang);
+
+const subjects = await getSubjects();
+const counts = await noteCounts();
+const areas = [
+  { key: 'math', title: t('library.math') },
+  { key: 'cs', title: t('library.cs') },
+] as const;
+---
+<Base title={t('library.title')} description={t('library.description')}>
+  <header class="page-head">
+    <h1>{t('library.title')}</h1>
+    <p>{t('library.lead')}</p>
+  </header>
+  {areas.map((a) => (
+    <section class="section">
+      <div class="section-header"><h2 class="section-title">{a.title}</h2></div>
+      <div class="grid-cards">
+        {subjects.filter((s) => s.data.area === a.key).map((s) => <SubjectCard subject={s} count={counts[s.id] ?? 0} lang={lang} />)}
+      </div>
+    </section>
+  ))}
+</Base>

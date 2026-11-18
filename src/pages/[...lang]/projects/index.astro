@@ -1,0 +1,35 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ProjectRow from '../../../components/ProjectRow.astro';
+import { getProjects } from '../../../data/content';
+import { langFromParam, langPaths, useT } from '../../../i18n';
+
+export const getStaticPaths = langPaths;
+const lang = langFromParam(Astro.params.lang);
+const t = useT(lang);
+
+const projects = await getProjects();
+const groups = [
+  { key: 'building', title: t('projects.building') },
+  { key: 'done', title: t('projects.done') },
+  { key: 'archived', title: t('projects.archived') },
+] as const;
+---
+<Base title={t('projects.title')} description={t('projects.description')}>
+  <header class="page-head">
+    <h1>{t('projects.title')}</h1>
+    <p>{t('projects.lead')}</p>
+  </header>
+  {groups.map((g) => {
+    const list = projects.filter((p) => p.data.status === g.key);
+    return list.length > 0 && (
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">{g.title}</h2>
+          <span class="section-sub">{list.length}</span>
+        </div>
+        <ul class="rows">{list.map((p) => <ProjectRow project={p} lang={lang} />)}</ul>
+      </section>
+    );
+  })}
+</Base>

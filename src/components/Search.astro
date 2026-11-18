@@ -1,0 +1,120 @@
+---
+// ⌘K / Ctrl+K search over projects, library subjects, notes and pages.
+// The index is built at build time from the content collections, so it never
+// goes stale. One index per language; links stay in the current language.
+// (Later, swap for Pagefind if full-text search inside notes is wanted.)
+import { getNotes, getProjects, getSubjects, noteSlug, noteText, projectText, subjectText } from '../data/content';
+import { href, langFromPath, useT } from '../i18n';
+
+const lang = langFromPath(Astro.url.pathname);
+const t = useT(lang);
+const projects = await getProjects();
+const subjects = await getSubjects();
+const notes = await getNotes();
+
+const index = [
+  { title: t('nav.projects'), meta: t('search.projectsMeta'), href: href(lang, '/projects'), kind: t('kind.page') },
+  { title: t('nav.library'), meta: t('search.libraryMeta'), href: href(lang, '/library'), kind: t('kind.page') },
+  { title: t('nav.about'), meta: t('search.aboutMeta'), href: href(lang, '/about'), kind: t('kind.page') },
+  ...(await Promise.all(projects.map(async (p) => {
+    const { title, summary } = await projectText(p, lang);
+    return { title, meta: `${summary} ${p.data.stack.join(' ')}`, href: href(lang, `/projects/${p.id}`), kind: t('kind.project') };
+  }))),
+  ...subjects.map((s) => {
+    const { title, sub } = subjectText(s, lang);
+    return { title, meta: sub ?? '', href: href(lang, `/library/${s.id}`), kind: t('kind.subject') };
+  }),
+  ...notes.map((n) => {
+    const { title, topics } = noteText(n, lang);
+    // also match the original title, so a Spanish search works on the English site
+    return { title, meta: [topics.join(' · '), title === n.data.title ? '' : n.data.title].filter(Boolean).join(' · '), href: href(lang, `/library/${n.data.subject.id}/${noteSlug(n)}`), kind: t('kind.note') };
+  }),
+];
+---
+<dialog class="search-dialog" id="search-dialog" aria-label={t('search.aria')} data-none={t('search.none')}>
+  <div class="search-head">
+    <label for="search-input" class="sr-only">{t('search.label')}</label>
+    <input id="search-input" class="search-input" type="search" placeholder={t('search.placeholder')} autocomplete="off" />
+    <button type="button" class="pill-btn" data-close-search>{t('search.close')}</button>
+  </div>
+  <ul class="search-results" id="search-results" role="listbox"></ul>
+</dialog>
+<script type="application/json" id="search-index" set:html={JSON.stringify(index)}></script>
+
+<script>
+  type Item = { title: string; meta: string; href: string; kind: string };
+  const dialog = document.getElementById('search-dialog') as HTMLDialogElement;
+  const input = document.getElementById('search-input') as HTMLInputElement;
+  const list = document.getElementById('search-results') as HTMLUListElement;
+  const index: Item[] = JSON.parse(document.getElementById('search-index')!.textContent || '[]');
+  let active = 0;
+
+  const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+  function render(q: string) {
+    const nq = norm(q.trim());
+    const hits = index.filter((i) => !nq || norm(`${i.title} ${i.meta} ${i.kind}`).includes(nq)).slice(0, 12);
+    list.replaceChildren();
+    active = 0;
+    if (!hits.length) {
+      const li = document.createElement('li');
+      li.className = 'search-empty';
+      li.textContent = `${dialog.dataset.none} “${q}”`;
+      list.append(li);
+      return;
+    }
+    hits.forEach((h, k) => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = h.href;
+      a.setAttribute('role', 'option');
+      a.setAttribute('aria-selected', String(k === 0));
+      const left = document.createElement('div');
+      const t = document.createElement('div');
+      t.className = 'search-title';
+      t.textContent = h.title;
+      const m = document.createElement('div');
+      m.className = 'search-meta';
+      m.textContent = h.meta;
+      left.append(t, m);
+      const badge = document.createElement('span');
+      badge.className = 'chip';
+      badge.textContent = h.kind;
+      a.append(left, badge);
+      li.append(a);
+      list.append(li);
+    });
+  }
+
+  function open() {
+    input.value = '';
+    render('');
+    dialog.showModal();
+    input.focus();
+  }
+
+  document.querySelectorAll('[data-open-search]').forEach((b) => b.addEventListener('click', open));
+  dialog.querySelector('[data-close-search]')?.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+  input.addEventListener('input', () => render(input.value));
+  input.addEventListener('keydown', (e) => {
+    const links = Array.from(list.querySelectorAll('a'));
+    if (!links.length) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      links[active]?.setAttribute('aria-selected', 'false');
+      active = (active + (e.key === 'ArrowDown' ? 1 : -1) + links.length) % links.length;
+      links[active].setAttribute('aria-selected', 'true');
+      links[active].scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      links[active].click();
+    }
+  });
+  window.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      dialog.open ? dialog.close() : open();
+    }
+  });
+</script>

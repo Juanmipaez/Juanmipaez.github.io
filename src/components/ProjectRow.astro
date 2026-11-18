@@ -1,0 +1,20 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { projectText } from '../data/content';
+import { href, useT, type Lang } from '../i18n';
+interface Props { project: CollectionEntry<'projects'>; lang: Lang; }
+const { project, lang } = Astro.props;
+const t = useT(lang);
+const { status, stack } = project.data;
+const { title, summary } = await projectText(project, lang);
+---
+<li class="row">
+  <div>
+    <a class="row-title" href={href(lang, `/projects/${project.id}`)}>{title}</a>
+    <p class="row-desc">{summary}</p>
+  </div>
+  <div class="row-meta">
+    {stack.length > 0 && <span>{stack.join(' · ')}</span>}
+    <span class="chip" data-status={status}>{t(`status.${status}`)}</span>
+  </div>
+</li>

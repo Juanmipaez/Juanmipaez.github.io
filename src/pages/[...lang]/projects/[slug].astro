@@ -1,0 +1,38 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Icon from '../../../components/Icon.astro';
+import { getProjects, projectText, renderProject } from '../../../data/content';
+import { href, langFromParam, langPaths, useT } from '../../../i18n';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return langPaths().flatMap(({ params }) =>
+    projects.map((p) => ({ params: { ...params, slug: p.id }, props: { project: p } }))
+  );
+}
+const { project } = Astro.props;
+const lang = langFromParam(Astro.params.lang);
+const t = useT(lang);
+const { status, stack, team, repo, demo } = project.data;
+const { title, summary, role, translated } = await projectText(project, lang);
+const { Content } = await renderProject(project, lang);
+---
+<Base title={title} description={summary}>
+  <header class="page-head">
+    <div class="crumbs"><a href={href(lang, '/projects')}>{t('projects.crumb')}</a> / {project.id}</div>
+    <h1>{title}</h1>
+    <p>{summary}</p>
+    <div class="facts">
+      <span class="chip" data-status={status}>{t(`status.${status}`)}</span>
+      {stack.length > 0 && <span>{stack.join(' · ')}</span>}
+      {team && <span>{t('projects.team')}</span>}
+      {repo && <a href={repo} target="_blank" rel="noopener noreferrer"><span style="display:inline-flex;gap:6px;align-items:center"><Icon name="github" size={13} />{t('projects.source')}</span></a>}
+      {demo && <a href={demo} target="_blank" rel="noopener noreferrer">{t('projects.demo')}</a>}
+    </div>
+    {role && <p style="margin-top:14px"><strong>{t('projects.myPart')}</strong> {role}</p>}
+  </header>
+  {!translated && <p class="empty" style="margin-top:28px">{t('projects.untranslated')}</p>}
+  <article class="prose" lang={translated ? lang : 'en'}>
+    <Content />
+  </article>
+</Base>

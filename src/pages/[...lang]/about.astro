@@ -1,0 +1,58 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { site, experience, education } from '../../data/site';
+import { langFromParam, langPaths, useT } from '../../i18n';
+
+export const getStaticPaths = langPaths;
+const lang = langFromParam(Astro.params.lang);
+const t = useT(lang);
+const intro = lang === 'es' ? `Soy ${site.name} (${site.nickname}),` : `I'm ${site.name} (${site.nickname}),`;
+---
+<Base title={t('about.title')} description={site.description[lang]}>
+  <header class="page-head">
+    <h1>{t('about.title')}</h1>
+    <p>{intro} {site.bio[lang]}</p>
+  </header>
+
+  <section class="section">
+    <div class="section-header"><h2 class="section-title">{t('about.experience')}</h2></div>
+    <ul class="rows">
+      {experience.map((e) => (
+        <li class="row">
+          <div>
+            <span class="row-title">{e.role[lang]}</span>
+            <p class="row-desc">{e.org}{e.note ? ` · ${e.note[lang]}` : ''}</p>
+          </div>
+          <div class="row-meta"><span>{e.period[lang]}</span></div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="section">
+    <div class="section-header"><h2 class="section-title">{t('about.education')}</h2></div>
+    <ul class="rows">
+      {education.map((e) => (
+        <li class="row">
+          <div>
+            <span class="row-title">{e.degree[lang]}</span>
+            <p class="row-desc">{e.org}</p>
+          </div>
+          <div class="row-meta"><span>{e.period[lang]}</span></div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="section">
+    <div class="section-header"><h2 class="section-title">{t('about.contact')}</h2></div>
+    <div class="footer-links" style="font-family: var(--fontMono); font-size: 13px">
+      <a href={site.cv.es} download="CV_JuanPaez_es.pdf" hreflang="es"><Icon name="file" size={15} />{t('about.cvEs')}</a>
+      <a href={site.cv.en} download="CV_JuanPaez_en.pdf" hreflang="en"><Icon name="file" size={15} />{t('about.cvEn')}</a>
+      <a href={`mailto:${site.email}`}><Icon name="mail" size={15} />{site.email}</a>
+      <a href={site.links.linkedin} target="_blank" rel="noopener noreferrer"><Icon name="linkedin" size={14} />linkedin</a>
+      <a href={site.links.github} target="_blank" rel="noopener noreferrer"><Icon name="github" size={15} />github</a>
+    </div>
+  </section>
+</Base>

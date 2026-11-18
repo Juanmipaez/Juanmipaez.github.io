@@ -1,0 +1,15 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { subjectText } from '../data/content';
+import { href, useT, type Lang } from '../i18n';
+interface Props { subject: CollectionEntry<'subjects'>; count: number; lang: Lang; }
+const { subject, count, lang } = Astro.props;
+const t = useT(lang);
+const { area } = subject.data;
+const { title, sub } = subjectText(subject, lang);
+---
+<a class="card" href={href(lang, `/library/${subject.id}`)}>
+  <span class="card-kicker"><span>{area === 'math' ? 'math' : 'cs'}</span><span>{count > 0 ? `${count} ${count === 1 ? t('library.note') : t('library.notes')}` : t('library.soon')}</span></span>
+  <h3 class="card-title">{title}</h3>
+  {sub && <p class="card-sub" lang={lang === 'en' ? 'es' : 'en'}>{sub}</p>}
+</a>

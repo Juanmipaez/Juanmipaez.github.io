@@ -1,0 +1,43 @@
+---
+import { render } from 'astro:content';
+import Base from '../../../../layouts/Base.astro';
+import { getNotes, getSubjects, noteSlug, noteText, subjectText } from '../../../../data/content';
+import { href, langFromParam, langPaths, useT } from '../../../../i18n';
+
+export async function getStaticPaths() {
+  const notes = await getNotes();
+  const subjects = await getSubjects();
+  return langPaths().flatMap(({ params }) =>
+    notes.map((n) => ({
+      params: { ...params, subject: n.data.subject.id, note: noteSlug(n) },
+      props: { note: n, subject: subjects.find((s) => s.id === n.data.subject.id)! },
+    }))
+  );
+}
+const { note, subject } = Astro.props;
+const lang = langFromParam(Astro.params.lang);
+const t = useT(lang);
+const { pdf, tex, semester, language, updated } = note.data;
+const { title, topics } = noteText(note, lang);
+const subjectTitle = subjectText(subject, lang).title;
+const { Content } = await render(note);
+---
+<Base title={title} description={`${title}: ${subjectTitle}.`}>
+  <header class="page-head">
+    <div class="crumbs"><a href={href(lang, '/library')}>{t('library.crumb')}</a> / <a href={href(lang, `/library/${subject.id}`)}>{subject.id}</a></div>
+    <h1>{title}</h1>
+    <div class="facts">
+      <span>{subjectTitle}</span>
+      {semester && <span>{semester}</span>}
+      <span>{language}</span>
+      {updated && <span>{t('library.updated')} {updated.toISOString().slice(0, 10)}</span>}
+      {pdf && <a href={pdf} download>pdf ↓</a>}
+      {tex && <a href={tex} target="_blank" rel="noopener noreferrer">{t('library.source')}</a>}
+    </div>
+    {topics.length > 0 && <div class="facts">{topics.map((tp) => <span>#{tp}</span>)}</div>}
+    {language !== lang && <p style="margin-top:14px">{t('library.inLang')}</p>}
+  </header>
+  <article class="prose" lang={language}>
+    <Content />
+  </article>
+</Base>

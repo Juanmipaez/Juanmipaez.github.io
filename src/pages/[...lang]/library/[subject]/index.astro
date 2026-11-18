@@ -1,0 +1,51 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import { getSubjects, getNotes, noteSlug, noteText, subjectText } from '../../../../data/content';
+import { href, langFromParam, langPaths, useT } from '../../../../i18n';
+
+export async function getStaticPaths() {
+  const subjects = await getSubjects();
+  const notes = await getNotes();
+  return langPaths().flatMap(({ params }) =>
+    subjects.map((s) => ({
+      params: { ...params, subject: s.id },
+      props: { subject: s, notes: notes.filter((n) => n.data.subject.id === s.id) },
+    }))
+  );
+}
+const { subject, notes } = Astro.props;
+const lang = langFromParam(Astro.params.lang);
+const t = useT(lang);
+const { title, sub, description } = subjectText(subject, lang);
+const rows = notes.map((n) => ({ note: n, ...noteText(n, lang) }));
+const topics = [...new Set(rows.flatMap((r) => r.topics))].sort();
+---
+<Base title={title} description={`${t('library.notesFor')} ${title}.`}>
+  <header class="page-head">
+    <div class="crumbs"><a href={href(lang, '/library')}>{t('library.crumb')}</a> / {subject.id}</div>
+    <h1>{title}</h1>
+    <p>{description ?? sub}</p>
+    {topics.length > 0 && <div class="facts">{topics.map((tp) => <span>#{tp}</span>)}</div>}
+  </header>
+  <section class="section">
+    {rows.length === 0 ? (
+      <p class="empty">{t('library.empty')}</p>
+    ) : (
+      <ul class="rows">
+        {rows.map(({ note: n, title: nt, topics: ntp }) => (
+          <li class="row">
+            <div>
+              <a class="row-title" href={href(lang, `/library/${subject.id}/${noteSlug(n)}`)}>{nt}</a>
+              <p class="row-desc">{ntp.join(' · ')}</p>
+            </div>
+            <div class="row-meta">
+              {n.data.semester && <span>{n.data.semester}</span>}
+              <span class="chip">{n.data.language}</span>
+              {n.data.pdf && <span class="chip">pdf</span>}
+            </div>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+</Base>

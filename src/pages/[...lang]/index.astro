@@ -1,0 +1,52 @@
+---
+import Base from '../../layouts/Base.astro';
+import Hero from '../../components/Hero.astro';
+import ProjectRow from '../../components/ProjectRow.astro';
+import SubjectCard from '../../components/SubjectCard.astro';
+import { now } from '../../data/site';
+import { getProjects, getSubjects, noteCounts } from '../../data/content';
+import { href, langFromParam, langPaths, useT } from '../../i18n';
+
+export const getStaticPaths = langPaths;
+const lang = langFromParam(Astro.params.lang);
+const t = useT(lang);
+
+const featured = (await getProjects()).filter((p) => p.data.featured).slice(0, 4);
+const subjects = await getSubjects();
+const counts = await noteCounts();
+---
+<Base>
+  <Hero lang={lang} />
+
+  <section class="section" aria-labelledby="now-title">
+    <div class="section-header">
+      <h2 id="now-title" class="section-title">{t('home.now')}</h2>
+      <span class="section-sub">{t('home.nowDate')}</span>
+    </div>
+    <ul class="now-list">
+      {now.map((n) => (
+        <li><span class="now-label">{n.label[lang]}</span><p>{n.text[lang]}</p></li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="section" aria-labelledby="projects-title">
+    <div class="section-header">
+      <h2 id="projects-title" class="section-title">{t('home.projects')}</h2>
+      <a class="section-more" href={href(lang, '/projects')}>{t('home.allProjects')}</a>
+    </div>
+    <ul class="rows">
+      {featured.map((p) => <ProjectRow project={p} lang={lang} />)}
+    </ul>
+  </section>
+
+  <section class="section" aria-labelledby="library-title">
+    <div class="section-header">
+      <h2 id="library-title" class="section-title">{t('home.library')}</h2>
+      <a class="section-more" href={href(lang, '/library')}>{t('home.openLibrary')}</a>
+    </div>
+    <div class="grid-cards">
+      {subjects.map((s) => <SubjectCard subject={s} count={counts[s.id] ?? 0} lang={lang} />)}
+    </div>
+  </section>
+</Base>
