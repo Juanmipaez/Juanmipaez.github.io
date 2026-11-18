@@ -1,0 +1,73 @@
+---
+// Home page hero: intro text + the animated figure (terminal intro → torus/Möbius, ASCII torus).
+// Layout: styles/components/hero.css · Animation: scripts/hero.ts
+import '../../styles/components/hero.css';
+import { site } from '../../data/site';
+import { href, useT, type Lang } from '../../i18n';
+
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+const t = useT(lang);
+// Strings the animation script shows (captions, buttons, canvas label).
+const heroStrings = {
+  cap1: t('hero.cap1'), act1: t('hero.act1'),
+  cap2: t('hero.cap2'), act2: t('hero.act2'),
+  split: t('hero.split'),
+  torus: t('hero.torus'), mobius: t('hero.mobius'), twisting: t('hero.twisting'),
+};
+---
+<section class="hero" data-hero data-strings={JSON.stringify(heroStrings)} aria-label={t('hero.aria')}>
+  <div class="hero-copy">
+    <h1>{t('hero.hi')} {site.nickname}. {site.tagline[lang]}</h1>
+    <p class="hero-lead">
+      {site.name}, {t('hero.lead')}
+    </p>
+    <div class="hero-links">
+      <a href={href(lang, '/projects')}>{t('nav.projects')} →</a>
+      <a href={href(lang, '/library')}>{t('nav.library')} →</a>
+      <a href={href(lang, '/about')}>{t('hero.aboutLink')}</a>
+    </div>
+  </div>
+
+  <div class="hero-figure">
+    <div class="stage" data-stage>
+      <canvas aria-label={t('hero.canvas')} role="img"></canvas>
+
+      <div class="term" data-term aria-hidden="true">
+        <div class="term-bar">
+          <span class="term-dots"><span></span><span></span><span></span></span>
+          <span>juanmi@unal: ~</span>
+          <span data-term-badge>01</span>
+        </div>
+        <div class="term-body">
+          <div class="term-line"><span class="term-prompt">$</span><span data-term-cmd></span><span class="term-cursor"></span></div>
+          <div class="term-out" data-term-out><span class="term-ok">[ok]</span> <span data-term-out-text></span></div>
+        </div>
+      </div>
+
+      <div class="hud" data-hud>
+        <span class="hud-caption" data-caption></span>
+        <button type="button" class="hud-btn" data-action>{t('hero.act1')}</button>
+      </div>
+    </div>
+
+    <div class="modes" role="tablist" aria-label={t('hero.modes')}>
+      <button type="button" class="mode active" role="tab" aria-selected="true" data-mode="mobius">
+        <span>{t('hero.mode1')}</span><span class="dot" aria-hidden="true"></span>
+      </button>
+      <button type="button" class="mode" role="tab" aria-selected="false" data-mode="ascii">
+        <span>{t('hero.mode2')}</span><span class="dot" aria-hidden="true"></span>
+      </button>
+    </div>
+    <div class="modes-foot">
+      <span>{t('hero.drag')}</span>
+      <button type="button" class="replay" data-replay>{t('hero.replay')}</button>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initHero } from '../../scripts/hero';
+  const el = document.querySelector<HTMLElement>('[data-hero]');
+  if (el) initHero(el);
+</script>

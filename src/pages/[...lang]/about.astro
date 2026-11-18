@@ -1,13 +1,13 @@
 ---
 import Base from '../../layouts/Base.astro';
-import Icon from '../../components/Icon.astro';
+import Icon from '../../components/ui/Icon.astro';
 import { site, experience, education } from '../../data/site';
 import { langFromParam, langPaths, useT } from '../../i18n';
 
 export const getStaticPaths = langPaths;
 const lang = langFromParam(Astro.params.lang);
 const t = useT(lang);
-const intro = lang === 'es' ? `Soy ${site.name} (${site.nickname}),` : `I'm ${site.name} (${site.nickname}),`;
+const intro = `${t('about.intro')} ${site.name} (${site.nickname}),`;
 ---
 <Base title={t('about.title')} description={site.description[lang]}>
   <header class="page-head">
@@ -47,7 +47,7 @@ const intro = lang === 'es' ? `Soy ${site.name} (${site.nickname}),` : `I'm ${si
 
   <section class="section">
     <div class="section-header"><h2 class="section-title">{t('about.contact')}</h2></div>
-    <div class="footer-links" style="font-family: var(--fontMono); font-size: 13px">
+    <div class="link-list contact-links">
       <a href={site.cv.es} download="CV_JuanPaez_es.pdf" hreflang="es"><Icon name="file" size={15} />{t('about.cvEs')}</a>
       <a href={site.cv.en} download="CV_JuanPaez_en.pdf" hreflang="en"><Icon name="file" size={15} />{t('about.cvEn')}</a>
       <a href={`mailto:${site.email}`}><Icon name="mail" size={15} />{site.email}</a>

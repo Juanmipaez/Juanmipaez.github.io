@@ -1,6 +1,6 @@
 ---
 import Base from '../../../layouts/Base.astro';
-import Icon from '../../../components/Icon.astro';
+import Icon from '../../../components/ui/Icon.astro';
 import { getProjects, projectText, renderProject } from '../../../data/content';
 import { href, langFromParam, langPaths, useT } from '../../../i18n';
 
@@ -26,12 +26,12 @@ const { Content } = await renderProject(project, lang);
       <span class="chip" data-status={status}>{t(`status.${status}`)}</span>
       {stack.length > 0 && <span>{stack.join(' · ')}</span>}
       {team && <span>{t('projects.team')}</span>}
-      {repo && <a href={repo} target="_blank" rel="noopener noreferrer"><span style="display:inline-flex;gap:6px;align-items:center"><Icon name="github" size={13} />{t('projects.source')}</span></a>}
+      {repo && <a href={repo} target="_blank" rel="noopener noreferrer"><span class="icon-label"><Icon name="github" size={13} />{t('projects.source')}</span></a>}
       {demo && <a href={demo} target="_blank" rel="noopener noreferrer">{t('projects.demo')}</a>}
     </div>
-    {role && <p style="margin-top:14px"><strong>{t('projects.myPart')}</strong> {role}</p>}
+    {role && <p class="page-note"><strong>{t('projects.myPart')}</strong> {role}</p>}
   </header>
-  {!translated && <p class="empty" style="margin-top:28px">{t('projects.untranslated')}</p>}
+  {!translated && <p class="empty notice">{t('projects.untranslated')}</p>}
   <article class="prose" lang={translated ? lang : 'en'}>
     <Content />
   </article>

@@ -30,6 +30,7 @@ const es = {
   'home.openLibrary': 'abrir la biblioteca →',
 
   // hero
+  'hero.aria': 'Introducción',
   'hero.hi': 'Hola, soy',
   // TODO(juanmi): is "monitor" the right Spanish title for your TA role at UNAL?
   'hero.lead':
@@ -87,6 +88,7 @@ const es = {
 
   // about
   'about.title': 'Sobre mí',
+  'about.intro': 'Soy',
   'about.experience': 'experiencia',
   'about.education': 'formación',
   'about.contact': 'cv y contacto',
@@ -135,6 +137,7 @@ const en: Record<Keys, string> = {
   'home.library': 'library',
   'home.openLibrary': 'open the library →',
 
+  'hero.aria': 'Introduction',
   'hero.hi': "Hi, I'm",
   'hero.lead':
     'Computer Science student at Universidad Nacional de Colombia (UNAL) and Linear Algebra teaching assistant. Currently into parallel computing, optimization and data.',
@@ -188,6 +191,7 @@ const en: Record<Keys, string> = {
   'library.inLang': 'This note is written in Spanish.',
 
   'about.title': 'About',
+  'about.intro': "I'm",
   'about.experience': 'experience',
   'about.education': 'education',
   'about.contact': 'cv & contact',

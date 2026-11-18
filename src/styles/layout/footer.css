@@ -1,0 +1,12 @@
+/* ==========================================================================
+   Footer (Footer.astro).
+   ========================================================================== */
+.site-footer { border-top: 1px solid var(--rule); margin-top: 24px; }
+/* bottom padding leaves room for the floating language switch */
+.footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px; padding: 28px 24px 76px; font-family: var(--fontMono); font-size: 12.5px; color: var(--muted); }
+
+/* Row of icon + label links: footer, and "cv & contact" on the about page */
+.link-list { display: flex; flex-wrap: wrap; gap: 18px; }
+.link-list a { display: inline-flex; align-items: center; gap: 7px; color: var(--ink); min-height: 32px; }
+.link-list a:hover { color: var(--accent); }
+.contact-links { font-family: var(--fontMono); font-size: 13px; }

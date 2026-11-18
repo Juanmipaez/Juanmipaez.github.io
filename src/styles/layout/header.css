@@ -1,0 +1,31 @@
+/* ==========================================================================
+   Header: brand, main navigation and the action buttons (Header.astro).
+   ========================================================================== */
+.site-header {
+  position: sticky; top: 0; z-index: 40;
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule);
+  transition: var(--themeTransition);
+}
+.header-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; min-height: 62px; flex-wrap: wrap; padding-block: 8px;
+}
+.brand {
+  font-family: var(--fontMono); font-weight: 600; font-size: 15px; letter-spacing: -0.02em;
+  display: inline-flex; align-items: center; gap: 8px; padding: 6px 0;
+}
+.brand-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.nav-cluster { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.nav-links { display: flex; align-items: center; gap: 18px; font-family: var(--fontMono); font-size: 13px; }
+.nav-links a { color: var(--muted); padding: 4px 2px; transition: color .18s ease; white-space: nowrap; }
+.nav-links a:hover, .nav-links a[aria-current='page'] { color: var(--ink); }
+.nav-links a[aria-current='page'] { text-decoration: underline; text-underline-offset: 6px; text-decoration-color: var(--accent); }
+.nav-soon { color: var(--muted); opacity: .68; cursor: default; white-space: nowrap; }
+.header-actions { display: flex; align-items: center; gap: 6px; }
+
+@media (max-width: 600px) {
+  .nav-links { gap: 6px 12px; font-size: 12px; flex-wrap: wrap; }
+  .search-label { display: none; }
+}

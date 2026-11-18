@@ -1,0 +1,39 @@
+/* ==========================================================================
+   Base: reset, typography defaults, focus ring, small utilities.
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 80px; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--fontBody);
+  font-size: 17px;
+  line-height: 1.62;
+  transition: var(--themeTransition);
+  -webkit-font-smoothing: antialiased;
+}
+[data-theme='terminal'] body { font-size: 15px; line-height: 1.68; }
+
+::selection { background: var(--accent); color: var(--bg); }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+img, svg { display: block; }
+
+.container { width: 100%; max-width: var(--containerMax); margin: 0 auto; padding: 0 24px; }
+.mono { font-family: var(--fontMono); }
+.muted { color: var(--muted); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.link { color: var(--accent); border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); padding-bottom: 1px; }
+.link:hover { border-bottom-color: var(--accent); }
+
+/* Skip link: hidden until focused with the keyboard */
+a.sr-only:focus { position: fixed; top: 8px; left: 8px; width: auto; height: auto; clip: auto; z-index: 100; padding: 8px 12px; background: var(--figBg); border: 1px solid var(--accent); border-radius: 6px; font-family: var(--fontMono); font-size: 13px; }
+
+@media (max-width: 600px) {
+  .container { padding: 0 16px; }
+}

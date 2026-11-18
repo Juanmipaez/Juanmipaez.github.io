@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { subjectText } from '../data/content';
-import { href, useT, type Lang } from '../i18n';
+import { subjectText } from '../../data/content';
+import { href, useT, type Lang } from '../../i18n';
 interface Props { subject: CollectionEntry<'subjects'>; count: number; lang: Lang; }
 const { subject, count, lang } = Astro.props;
 const t = useT(lang);

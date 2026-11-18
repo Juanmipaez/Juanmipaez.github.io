@@ -35,7 +35,7 @@ const { Content } = await render(note);
       {tex && <a href={tex} target="_blank" rel="noopener noreferrer">{t('library.source')}</a>}
     </div>
     {topics.length > 0 && <div class="facts">{topics.map((tp) => <span>#{tp}</span>)}</div>}
-    {language !== lang && <p style="margin-top:14px">{t('library.inLang')}</p>}
+    {language !== lang && <p class="page-note">{t('library.inLang')}</p>}
   </header>
   <article class="prose" lang={language}>
     <Content />

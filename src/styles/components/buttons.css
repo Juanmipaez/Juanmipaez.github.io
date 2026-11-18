@@ -1,0 +1,20 @@
+/* ==========================================================================
+   Buttons shared by the header and the search dialog.
+   ========================================================================== */
+.icon-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 6px; color: var(--muted);
+  border: 1px solid transparent;
+  transition: color .18s ease, border-color .18s ease, background-color .18s ease;
+}
+.icon-btn:hover { color: var(--ink); border-color: var(--rule); background: var(--figBg); }
+
+.pill-btn {
+  font-family: var(--fontMono); font-size: 12px; line-height: 1;
+  padding: 9px 11px; min-height: 36px; border-radius: 6px;
+  border: 1px solid var(--rule); background: var(--figBg); color: var(--ink);
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: border-color .18s ease, color .18s ease, background-color .18s ease;
+}
+.pill-btn:hover { border-color: var(--accent); color: var(--accent); }
+.kbd { font-size: 11px; color: var(--muted); padding: 1px 4px; border-radius: 4px; border: 1px solid var(--rule); }

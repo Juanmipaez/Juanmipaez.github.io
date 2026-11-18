@@ -1,0 +1,28 @@
+---
+// Floating ES | EN switch, bottom-right. Real links to the same page in the other language.
+// Styles: styles/components/lang-switch.css · Behavior: scripts/lang-switch.ts
+import '../../styles/components/lang-switch.css';
+import { alternate, langFromPath, ui, type Lang } from '../../i18n';
+
+const current = langFromPath(Astro.url.pathname);
+const options: { lang: Lang; label: string; name: string }[] = [
+  { lang: 'es', label: 'ES', name: 'Español' },
+  { lang: 'en', label: 'EN', name: 'English' },
+];
+---
+<nav class="lang-switch" aria-label={ui[current]['lang.switch']}>
+  {options.map((o) => (
+    <a
+      href={alternate(Astro.url.pathname, o.lang)}
+      hreflang={o.lang}
+      lang={o.lang}
+      aria-label={o.name}
+      aria-current={o.lang === current ? 'true' : undefined}
+      data-lang-link={o.lang}
+    >{o.label}</a>
+  ))}
+</nav>
+
+<script>
+  import '../../scripts/lang-switch';
+</script>

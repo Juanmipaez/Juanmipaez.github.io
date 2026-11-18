@@ -1,0 +1,113 @@
+/* ==========================================================================
+   Hero (Hero.astro): intro text on the left, animated figure on the right.
+   The animation itself is drawn by scripts/hero.ts; this file only lays it out.
+   Every selector starts with .hero so nothing leaks into other pages.
+   ========================================================================== */
+
+/* ---------- layout + copy ---------- */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 470px);
+  align-items: center;
+  gap: 44px;
+  padding: 58px 0 54px;
+  border-bottom: 1px solid var(--rule);
+}
+.hero h1 {
+  margin: 0 0 18px;
+  font-size: clamp(2rem, 3.6vw, 2.75rem);
+  font-weight: 600;
+  line-height: 1.16;
+  letter-spacing: -0.025em;
+}
+[data-theme='terminal'] .hero h1 { font-size: clamp(1.55rem, 2.7vw, 2.05rem); line-height: 1.28; }
+.hero-lead { margin: 0 0 26px; color: var(--muted); font-size: 1.06rem; line-height: 1.65; max-width: 52ch; }
+.hero-links { display: flex; flex-wrap: wrap; gap: 20px; font-family: var(--fontMono); font-size: 13.5px; }
+.hero-links a { color: var(--accent); border-bottom: 1px solid color-mix(in srgb, var(--accent) 42%, transparent); padding-bottom: 2px; }
+.hero-links a:hover { border-bottom-color: var(--accent); }
+
+/* ---------- figure: canvas stage ---------- */
+.hero-figure { display: flex; flex-direction: column; align-items: center; width: 100%; }
+.hero .stage {
+  position: relative; width: 100%; max-width: 470px; aspect-ratio: 470 / 340;
+  border-radius: 10px; overflow: hidden; user-select: none; touch-action: pan-y;
+}
+.hero canvas {
+  display: block; width: 100%; height: 100%; cursor: grab;
+  opacity: 0; transform: scale(.985);
+  transition: opacity .65s cubic-bezier(.22, 1, .36, 1), transform .65s cubic-bezier(.22, 1, .36, 1);
+}
+.hero canvas:active { cursor: grabbing; }
+.hero canvas.visible { opacity: 1; transform: scale(1); }
+
+/* ---------- terminal intro card (types a command, then dissolves) ---------- */
+.hero .term {
+  position: absolute; top: 50%; left: 50%; width: min(388px, 92%); z-index: 2;
+  background: var(--termBg); border: 1px solid var(--termRule); border-radius: 8px; overflow: hidden;
+  box-shadow: 0 18px 40px -14px rgba(0, 0, 0, .32), 0 4px 12px -2px rgba(0, 0, 0, .18);
+  transform: translate(-50%, -50%);
+  transition: opacity .55s cubic-bezier(.22, 1, .36, 1), transform .55s cubic-bezier(.22, 1, .36, 1);
+}
+.hero .term.dissolving { opacity: 0; transform: translate(-50%, -50%) scale(.95); pointer-events: none; }
+.hero .term-bar {
+  display: flex; align-items: center; justify-content: space-between; padding: 8px 12px;
+  border-bottom: 1px solid var(--termRule); font-family: var(--fontMono); font-size: 11px; color: var(--termMuted);
+}
+.hero .term-dots { display: inline-flex; gap: 6px; }
+.hero .term-dots span { width: 8px; height: 8px; border-radius: 50%; opacity: .78; }
+/* macOS-style window dots: decorative, the same in both themes */
+.hero .term-dots span:nth-child(1) { background: #EF4444; }
+.hero .term-dots span:nth-child(2) { background: #F59E0B; }
+.hero .term-dots span:nth-child(3) { background: #22C55E; }
+.hero .term-body {
+  padding: 15px 16px 17px; min-height: 88px; display: flex; flex-direction: column; justify-content: center; gap: 6px;
+  font-family: var(--fontMono); font-size: 12.5px; line-height: 1.55; color: var(--termInk);
+}
+.hero .term-line { white-space: pre-wrap; word-break: break-all; }
+.hero .term-prompt { color: var(--termAccent); margin-right: 7px; font-weight: 600; }
+.hero .term-cursor { display: inline-block; width: 7.5px; height: 14px; margin-left: 2px; vertical-align: -2px; background: var(--termAccent); animation: hero-blink .72s steps(1, end) infinite; }
+@keyframes hero-blink { 50% { opacity: 0; } }
+.hero .term-out { font-size: 11.5px; color: var(--termMuted); min-height: 18px; opacity: 0; transform: translateY(2px); transition: opacity .2s ease, transform .2s ease; }
+.hero .term-out.shown { opacity: 1; transform: none; }
+.hero .term-ok { color: var(--termAccent); font-weight: 500; }
+
+/* ---------- HUD over the canvas: caption + action button ---------- */
+.hero .hud {
+  position: absolute; left: 8px; right: 8px; bottom: 8px; z-index: 1;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  pointer-events: none; opacity: 0; transition: opacity .4s ease;
+}
+.hero .hud.visible { opacity: 1; }
+.hero .hud-caption {
+  font-family: var(--fontMono); font-size: 11px; color: var(--muted); padding: 3px 7px; border-radius: 5px;
+  background: color-mix(in srgb, var(--bg) 82%, transparent); border: 1px solid color-mix(in srgb, var(--rule) 75%, transparent);
+}
+.hero .hud-btn {
+  pointer-events: auto; font-family: var(--fontMono); font-size: 11px; font-weight: 500; padding: 6px 10px; min-height: 30px;
+  border-radius: 5px; background: var(--figBg); border: 1px solid var(--rule); color: var(--ink);
+}
+.hero .hud-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ---------- mode tabs + replay ---------- */
+.hero .modes { width: 100%; max-width: 470px; margin-top: 12px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.hero .mode {
+  font-family: var(--fontMono); font-size: 12px; text-align: left; padding: 8px 10px; min-height: 36px; border-radius: 6px;
+  border: 1px solid var(--rule); background: var(--figBg); color: var(--muted);
+  display: flex; align-items: center; justify-content: space-between; gap: 6px;
+}
+.hero .mode:hover { color: var(--ink); }
+.hero .mode.active { color: var(--accent); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 7%, var(--figBg)); }
+.hero .dot { width: 6px; height: 6px; border-radius: 50%; }
+.hero .mode.active .dot { background: var(--accent); }
+.hero .modes-foot { width: 100%; max-width: 470px; margin-top: 8px; display: flex; justify-content: space-between; align-items: center; font-family: var(--fontMono); font-size: 11px; color: var(--muted); }
+.hero .replay { font-family: var(--fontMono); font-size: 11.5px; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--rule); background: var(--figBg); }
+.hero .replay:hover { border-color: var(--accent2); color: var(--accent2); }
+
+/* ---------- motion + mobile ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .hero .term-cursor { animation: none; }
+}
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; gap: 32px; padding: 36px 0 42px; }
+  .hero-figure { align-items: flex-start; }
+}
