@@ -1,1 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#141612"/><ellipse cx="16" cy="16" rx="11" ry="6.5" fill="none" stroke="#4ADE80" stroke-width="2.2"/><ellipse cx="16" cy="15" rx="4.2" ry="1.8" fill="none" stroke="#4ADE80" stroke-width="2"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" fill="none">
+  <!-- Dark card background -->
+  <rect width="32" height="32" rx="7" fill="#141612" />
+
+  <!-- P bowl (Cool Slate Gray) emerging from the shared central spine -->
+  <path d="M 17.0 6.0 H 19.75 A 5.75 5.75 0 0 1 19.75 17.5 H 17.0 V 14.2 H 19.75 A 2.45 2.45 0 0 0 19.75 9.3 H 17.0 Z" fill="#6E737B" />
+
+  <!-- J shared spine, top flag, and circular bottom hook (Champagne Brass) -->
+  <path d="M 10.25 6.0 H 18.0 V 20.25 A 5.75 5.75 0 0 1 6.5 20.25 H 10.0 A 2.25 2.25 0 0 0 14.5 20.25 V 9.3 H 10.25 Z" fill="#DFC286" />
+</svg>
