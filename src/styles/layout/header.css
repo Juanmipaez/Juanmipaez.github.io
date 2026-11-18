@@ -1,5 +1,8 @@
 /* ==========================================================================
    Header: brand, main navigation and the action buttons (Header.astro).
+   Desktop: one row, everything inline.
+   ≤ 900px: brand + search + theme + ☰ in one row; the navigation and social
+   links live in a panel the ☰ button opens (scripts/mobile-menu.ts).
    ========================================================================== */
 .site-header {
   position: sticky; top: 0; z-index: 40;
@@ -17,15 +20,49 @@
   display: inline-flex; align-items: center; gap: 8px; padding: 6px 0;
 }
 .brand-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
-.nav-cluster { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+
+/* nav [18px] github [6px] linkedin [6px] search [6px] theme */
+.nav-cluster { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.menu-panel { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
 .nav-links { display: flex; align-items: center; gap: 18px; font-family: var(--fontMono); font-size: 13px; }
 .nav-links a { color: var(--muted); padding: 4px 2px; transition: color .18s ease; white-space: nowrap; }
 .nav-links a:hover, .nav-links a[aria-current='page'] { color: var(--ink); }
 .nav-links a[aria-current='page'] { text-decoration: underline; text-underline-offset: 6px; text-decoration-color: var(--accent); }
 .nav-soon { color: var(--muted); opacity: .68; cursor: default; white-space: nowrap; }
-.header-actions { display: flex; align-items: center; gap: 6px; }
+.header-social, .header-actions { display: flex; align-items: center; gap: 6px; }
 
+.menu-btn { display: none; }
+
+/* ---------- compact header (≤ 900px: the full row no longer fits) ---------- */
+@media (max-width: 900px) {
+  /* With JS: one row, and the links fold into the ☰ panel. */
+  .js .header-inner { flex-wrap: nowrap; }
+  .js .menu-btn { display: inline-flex; }
+
+  .js .menu-panel {
+    display: none;
+    position: absolute; top: 100%; left: 0; right: 0;
+    flex-direction: column; align-items: stretch; gap: 0;
+    padding: 4px 24px 14px; /* same side margins as .container */
+    background: var(--bg);
+    border-bottom: 1px solid var(--rule);
+    box-shadow: 0 14px 24px -18px color-mix(in srgb, var(--ink) 45%, transparent);
+  }
+  .js [data-menu-open] .menu-panel { display: flex; }
+
+  .js .menu-panel .nav-links { flex-direction: column; align-items: stretch; gap: 0; font-size: 14px; }
+  .js .menu-panel .nav-links a,
+  .js .menu-panel .nav-soon {
+    display: flex; align-items: center; min-height: 46px; padding: 0 2px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .js .menu-panel .header-social { padding-top: 10px; margin-left: -8px; }
+}
+
+/* ---------- phones ---------- */
 @media (max-width: 600px) {
+  .search-label, .kbd { display: none; }
+  .js .menu-panel { padding-inline: 16px; }
+  /* Without JS (no ☰ menu) the links just wrap below the brand. */
   .nav-links { gap: 6px 12px; font-size: 12px; flex-wrap: wrap; }
-  .search-label { display: none; }
 }

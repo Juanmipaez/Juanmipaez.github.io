@@ -44,6 +44,7 @@ src/
 │   ├── hero.ts               canvas animation: torus → Möbius strip, ASCII torus
 │   ├── search.ts             ⌘K search dialog
 │   ├── theme.ts              paper ↔ terminal toggle
+│   ├── mobile-menu.ts        ☰ menu on narrow screens
 │   └── lang-switch.ts        keeps the #hash when switching language
 │
 ├── i18n/                     Spanish/English: UI strings (ui.ts) + URL helpers (index.ts)
