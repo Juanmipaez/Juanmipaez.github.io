@@ -1,0 +1,26 @@
+---
+// ⌘K / Ctrl+K search dialog, present on every page.
+// Index: data/search-index.ts (built at build time, one per language)
+// Styles: styles/components/search.css · Behavior: scripts/search.ts
+// (Later, swap for Pagefind if full-text search inside notes is wanted.)
+import '../../styles/components/search.css';
+import { buildSearchIndex } from '../../data/search-index';
+import { langFromPath, useT } from '../../i18n';
+
+const lang = langFromPath(Astro.url.pathname);
+const t = useT(lang);
+const index = await buildSearchIndex(lang);
+---
+<dialog class="search-dialog" id="search-dialog" aria-label={t('search.aria')} data-none={t('search.none')}>
+  <div class="search-head">
+    <label for="search-input" class="sr-only">{t('search.label')}</label>
+    <input id="search-input" class="search-input" type="search" placeholder={t('search.placeholder')} autocomplete="off" />
+    <button type="button" class="pill-btn" data-close-search>{t('search.close')}</button>
+  </div>
+  <ul class="search-results" id="search-results" role="listbox"></ul>
+</dialog>
+<script type="application/json" id="search-index" set:html={JSON.stringify(index)}></script>
+
+<script>
+  import '../../scripts/search';
+</script>

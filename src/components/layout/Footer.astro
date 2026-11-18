@@ -1,7 +1,11 @@
 ---
-import Icon from './Icon.astro';
-import { site } from '../data/site';
-import { langFromPath, useT } from '../i18n';
+// Site footer: GitHub, LinkedIn, CV (in the page's language, downloads on click) and email.
+// Styles: styles/layout/footer.css
+import '../../styles/layout/footer.css';
+import Icon from '../ui/Icon.astro';
+import { site } from '../../data/site';
+import { langFromPath, useT } from '../../i18n';
+
 const lang = langFromPath(Astro.url.pathname);
 const t = useT(lang);
 const year = new Date().getFullYear();
@@ -10,7 +14,7 @@ const cv = site.cv[lang];
 <footer class="site-footer" id="contact">
   <div class="container footer-inner">
     <span>© {year} {site.name} · UNAL</span>
-    <nav class="footer-links" aria-label={t('footer.aria')}>
+    <nav class="link-list" aria-label={t('footer.aria')}>
       <a href={site.links.github} target="_blank" rel="noopener noreferrer"><Icon name="github" size={15} />github</a>
       <a href={site.links.linkedin} target="_blank" rel="noopener noreferrer"><Icon name="linkedin" size={14} />linkedin</a>
       <a href={cv} download={cv.split('/').pop()}><Icon name="file" size={15} />{t('footer.cv')}</a>

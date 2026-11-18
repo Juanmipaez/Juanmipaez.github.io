@@ -1,0 +1,12 @@
+/* ==========================================================================
+   Long-form content: project write-ups and notes (Markdown + KaTeX).
+   ========================================================================== */
+.prose { max-width: 70ch; padding: 36px 0 56px; }
+.prose h2 { font-size: 1.3rem; margin: 2em 0 .5em; }
+.prose h3 { font-size: 1.1rem; margin: 1.6em 0 .4em; }
+.prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.prose code { font-family: var(--fontMono); font-size: .88em; background: var(--figBg); border: 1px solid var(--rule); border-radius: 4px; padding: 0 4px; }
+.prose pre { background: var(--termBg); color: var(--termInk); padding: 14px 16px; border-radius: var(--radius); overflow-x: auto; font-size: 13px; }
+.prose pre code { background: none; border: none; padding: 0; }
+.prose img { max-width: 100%; height: auto; border-radius: var(--radius); }
+.prose .katex-display { overflow-x: auto; overflow-y: hidden; padding: 4px 0; }
